@@ -85,17 +85,20 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         content:
           "Combine multiple resumes into one polished team resume with AI. Upload PDFs or DOCX files, generate, edit, and download as PDF or DOCX.",
       },
-      { property: "og:title", content: "Team Resume Maker" },
+      { property: "og:title", content: "Team Resume Maker — AI-Powered Group Resume Builder" },
       {
         property: "og:description",
-        content: "AI-powered group resume builder. Merge multiple resumes into one.",
+        content: "Combine multiple resumes into one polished team resume with AI. Upload PDFs or DOCX files, generate, edit, and download as PDF or DOCX.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "Team Resume Maker — AI-Powered Group Resume Builder" },
+      { name: "twitter:description", content: "Combine multiple resumes into one polished team resume with AI. Upload PDFs or DOCX files, generate, edit, and download as PDF or DOCX." },
+      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/bf2ad3f7-88b2-4370-b4d9-3e96ccca4e66" },
+      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/bf2ad3f7-88b2-4370-b4d9-3e96ccca4e66" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
-      { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
