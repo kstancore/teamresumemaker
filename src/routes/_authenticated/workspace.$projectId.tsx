@@ -459,6 +459,3 @@ function ResumeFields({
   );
 }
 
-// Import at bottom to avoid circular concerns
-import { emptyTeamResume as _et } from "@/lib/resume-types";
-void _et;
