@@ -24,7 +24,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 
-export const Route = createFileRoute("/_authenticated/workspace")({
+export const Route = createFileRoute("/_authenticated/workspace/")({
   component: Workspace,
 });
 
