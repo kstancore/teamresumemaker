@@ -99,26 +99,49 @@ function Editor() {
     uploadingRef.current = true;
     setUploading(true);
     try {
-      const { data: sess } = await supabase.auth.getUser();
+      const { data: sess, error: sessErr } = await supabase.auth.getUser();
+      if (sessErr) {
+        console.error("[upload] auth error", sessErr);
+        toast.error("You must be signed in to upload.");
+        return;
+      }
       const uid = sess.user?.id;
-      if (!uid) throw new Error("Not signed in");
+      if (!uid) {
+        toast.error("You must be signed in to upload.");
+        return;
+      }
 
       for (const file of Array.from(files)) {
+        console.log("[upload] processing", file.name, file.size);
         if (!/\.(pdf|docx)$/i.test(file.name)) {
           toast.error(`${file.name}: only PDF or DOCX supported`);
           continue;
         }
+        if (file.size > 15 * 1024 * 1024) {
+          toast.error(`${file.name}: file too large (max 15MB)`);
+          continue;
+        }
         try {
           const text = await extractTextFromFile(file);
+          console.log("[upload] extracted", file.name, "chars:", text.length);
           if (!text || text.length < 20) {
-            toast.error(`${file.name}: couldn't extract enough text`);
+            toast.error(
+              `${file.name}: couldn't extract text. If this is a scanned PDF, please upload a text-based PDF or DOCX.`,
+            );
             continue;
           }
-          const path = `${uid}/${projectId}/${Date.now()}-${file.name}`;
+          const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+          const path = `${uid}/${projectId}/${Date.now()}-${safeName}`;
           const { error: upErr } = await supabase.storage
             .from("resumes")
-            .upload(path, file, { upsert: false });
-          if (upErr) throw upErr;
+            .upload(path, file, {
+              upsert: false,
+              contentType: file.type || undefined,
+            });
+          if (upErr) {
+            console.error("[upload] storage error", upErr);
+            throw upErr;
+          }
 
           await addFileFn({
             data: {
@@ -131,17 +154,22 @@ function Editor() {
           });
           toast.success(`Added ${file.name}`);
         } catch (e) {
+          console.error("[upload] failed", file.name, e);
           toast.error(
             `${file.name}: ${e instanceof Error ? e.message : "upload failed"}`,
           );
         }
       }
       qc.invalidateQueries({ queryKey: ["project", projectId] });
+    } catch (e) {
+      console.error("[upload] fatal", e);
+      toast.error(e instanceof Error ? e.message : "Upload failed");
     } finally {
       uploadingRef.current = false;
       setUploading(false);
     }
   }
+
 
   async function handleGenerate() {
     if (!data || data.files.length < 2) {
