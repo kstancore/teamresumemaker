@@ -38,11 +38,9 @@ async function extractPdf(file: File): Promise<string> {
         .map((it: any) => ("str" in it ? it.str : ""))
         .join(" ") + "\n";
   }
-  try {
-    await doc.destroy();
-  } catch {
-    /* ignore */
-  }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  try { await (doc as any).destroy?.(); } catch { /* ignore */ }
+
   return text.trim();
 }
 
