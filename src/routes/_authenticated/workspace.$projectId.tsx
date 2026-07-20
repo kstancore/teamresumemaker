@@ -32,6 +32,7 @@ import {
   ModernTemplate,
   ClassicTemplate,
   CompactTemplate,
+  CoverPage,
 } from "@/components/resume-templates";
 import type { TeamResume, TemplateId } from "@/lib/resume-types";
 import { emptyTeamResume } from "@/lib/resume-types";
