@@ -73,12 +73,8 @@ function Workspace() {
       <header className="border-b border-border">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
           <div className="flex items-center gap-2">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => (window.history.length > 1 ? window.history.back() : navigate({ to: "/" }))}
-            >
-              <ArrowLeft className="mr-1 h-4 w-4" /> Back
+            <Button variant="ghost" size="sm" onClick={() => navigate({ to: "/" })}>
+              <ArrowLeft className="mr-1 h-4 w-4" /> Back to home
             </Button>
             <Link to="/workspace" className="flex items-center gap-2">
               <div className="flex h-8 w-8 items-center justify-center rounded-md bg-primary text-primary-foreground">
