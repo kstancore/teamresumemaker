@@ -32,6 +32,7 @@ import {
   ModernTemplate,
   ClassicTemplate,
   CompactTemplate,
+  CoverPage,
 } from "@/components/resume-templates";
 import type { TeamResume, TemplateId } from "@/lib/resume-types";
 import { emptyTeamResume } from "@/lib/resume-types";
@@ -320,7 +321,8 @@ function Editor() {
         {/* Right: preview */}
         <div className="min-w-0">
           {resume ? (
-            <div className="overflow-x-auto rounded-xl border border-border bg-muted/40 p-4">
+            <div className="space-y-4 overflow-x-auto rounded-xl border border-border bg-muted/40 p-4">
+              <CoverPage resume={resume} />
               {template === "modern" && <ModernTemplate resume={resume} />}
               {template === "classic" && <ClassicTemplate resume={resume} />}
               {template === "compact" && <CompactTemplate resume={resume} />}

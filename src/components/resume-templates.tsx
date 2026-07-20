@@ -4,6 +4,64 @@ interface Props {
   resume: TeamResume;
 }
 
+export function CoverPage({ resume }: Props) {
+  const today = new Date().toLocaleDateString(undefined, {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+  return (
+    <div className="relative mx-auto mb-6 flex min-h-[1050px] max-w-[820px] flex-col justify-between overflow-hidden bg-[#1a1f36] p-14 text-white shadow-sm print:shadow-none">
+      <div className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-[#c9884a]/30 blur-3xl" />
+      <div className="pointer-events-none absolute -bottom-32 -left-20 h-80 w-80 rounded-full bg-[#c9884a]/20 blur-3xl" />
+
+      <div className="relative">
+        <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-3 py-1 text-[11px] uppercase tracking-[0.2em] text-[#f3ecdf]">
+          Team Resume
+        </div>
+        <div className="mt-16">
+          <div className="h-1 w-16 bg-[#c9884a]" />
+          <h1 className="mt-6 font-serif text-6xl leading-[1.05]">{resume.team_name}</h1>
+          {resume.headline && (
+            <p className="mt-5 max-w-xl text-lg text-[#f3ecdf]/90">{resume.headline}</p>
+          )}
+        </div>
+
+        {resume.members?.length > 0 && (
+          <div className="mt-14">
+            <div className="text-[11px] uppercase tracking-[0.2em] text-[#c9884a]">
+              Presented by
+            </div>
+            <ul className="mt-3 flex flex-wrap gap-x-6 gap-y-1 text-base">
+              {resume.members.map((m, i) => (
+                <li key={i}>
+                  <span className="font-semibold">{m.name}</span>
+                  {m.title && (
+                    <span className="text-[#f3ecdf]/70"> — {m.title}</span>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </div>
+
+      <div className="relative mt-10 flex flex-wrap items-end justify-between gap-4 border-t border-white/15 pt-6 text-xs text-[#f3ecdf]/80">
+        <div className="space-y-1">
+          {resume.contact.email && <div>{resume.contact.email}</div>}
+          {resume.contact.phone && <div>{resume.contact.phone}</div>}
+          {resume.contact.location && <div>{resume.contact.location}</div>}
+          {resume.contact.website && <div>{resume.contact.website}</div>}
+        </div>
+        <div className="text-right">
+          <div className="uppercase tracking-[0.2em] text-[#c9884a]">Prepared</div>
+          <div className="mt-1">{today}</div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function ModernTemplate({ resume }: Props) {
   return (
     <div className="mx-auto max-w-[820px] bg-white p-12 font-sans text-[#1a1f36] shadow-sm print:shadow-none">
