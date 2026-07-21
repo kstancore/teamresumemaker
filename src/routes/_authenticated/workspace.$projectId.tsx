@@ -115,7 +115,7 @@ function Editor() {
         return;
       }
 
-      for (const file of Array.from(files)) {
+      for (const file of filesToProcess) {
         console.log("[upload] processing", file.name, file.size);
         if (!/\.(pdf|docx)$/i.test(file.name)) {
           toast.error(`${file.name}: only PDF or DOCX supported`);
