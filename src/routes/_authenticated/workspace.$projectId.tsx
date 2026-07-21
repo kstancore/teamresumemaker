@@ -94,8 +94,12 @@ function Editor() {
   const [uploading, setUploading] = useState(false);
   const [generating, setGenerating] = useState(false);
 
-  async function handleUpload(files: FileList | null) {
-    if (!files || files.length === 0 || uploadingRef.current) return;
+  async function handleUpload(fileList: FileList | null) {
+    if (!fileList || fileList.length === 0 || uploadingRef.current) return;
+    // Snapshot files synchronously — the caller resets input.value immediately
+    // after invoking us, which would otherwise clear this live FileList before
+    // our async work runs.
+    const filesToProcess = Array.from(fileList);
     uploadingRef.current = true;
     setUploading(true);
     try {
@@ -111,7 +115,7 @@ function Editor() {
         return;
       }
 
-      for (const file of Array.from(files)) {
+      for (const file of filesToProcess) {
         console.log("[upload] processing", file.name, file.size);
         if (!/\.(pdf|docx)$/i.test(file.name)) {
           toast.error(`${file.name}: only PDF or DOCX supported`);
