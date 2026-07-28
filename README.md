@@ -1,0 +1,1 @@
+Team Resume Maker is a web tool that combines individual member profiles into standardized, professional team resumes. It lets users customize roles and highlight relevant skills to fit specific project proposals. Featuring brand styling and one-click PDF/Word exports, it eliminates manual formatting for client pitches.
