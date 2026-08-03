@@ -31,31 +31,55 @@ function Landing() {
       </header>
 
       <main>
-        <section className="mx-auto max-w-6xl px-6 py-24">
-          <div className="max-w-3xl">
-            <h1 className="mt-6 font-serif text-5xl leading-[1.05] tracking-tight md:text-6xl">
-              One team.
-              <br />
-              <span className="text-accent">One resume.</span>
-            </h1>
-            <p className="mt-6 max-w-2xl text-lg text-muted-foreground">
-              Combine multiple resumes into a single, polished team resume. Upload PDFs or DOCX
-              files, let AI merge them into a unified story, then edit, restyle, and export.
-            </p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Link to="/auth" search={{ mode: "signup" }}>
-                <Button size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90">
-                  Build your team resume
-                </Button>
-              </Link>
-              <Link to="/auth">
-                <Button size="lg" variant="outline">
-                  Sign in
-                </Button>
-              </Link>
+        <section className="mx-auto max-w-6xl px-6 py-20 lg:py-28">
+          <div className="grid items-center gap-12 lg:grid-cols-[1.15fr_1fr]">
+            <div>
+              <h1 className="font-serif text-6xl leading-[1.02] tracking-tight md:text-7xl lg:text-8xl">
+                One team.
+                <br />
+                <span className="text-accent">One resume.</span>
+              </h1>
+              <p className="mt-8 max-w-2xl text-xl leading-relaxed text-muted-foreground md:text-2xl">
+                Combine multiple resumes into a single, polished team resume. Upload PDFs or DOCX
+                files, let AI merge them into a unified story, then edit, restyle, and export.
+              </p>
+              <div className="mt-10 flex flex-wrap gap-4">
+                <Link to="/auth" search={{ mode: "signup" }}>
+                  <Button
+                    size="lg"
+                    className="h-14 px-8 text-lg bg-primary text-primary-foreground hover:bg-primary/90"
+                  >
+                    Build your team resume
+                  </Button>
+                </Link>
+                <Link to="/auth">
+                  <Button size="lg" variant="outline" className="h-14 px-8 text-lg">
+                    Sign in
+                  </Button>
+                </Link>
+              </div>
+            </div>
+
+            {/* Desk doodles */}
+            <div className="relative mx-auto grid w-full max-w-md grid-cols-3 gap-4 text-primary/70">
+              {[Laptop, Coffee, PenLine, BookOpen, Smartphone, Pencil, StickyNote, Ruler, Paperclip].map(
+                (Icon, i) => (
+                  <div
+                    key={i}
+                    className="flex aspect-square items-center justify-center rounded-2xl border border-border bg-card/70 paper-card"
+                    style={{ transform: `rotate(${(i % 3) - 1}deg)` }}
+                  >
+                    <Icon className="h-9 w-9 md:h-11 md:w-11" strokeWidth={1.5} />
+                  </div>
+                ),
+              )}
+              <p className="note-hand col-span-3 text-center text-2xl text-accent-foreground/80">
+                everything on your desk, in one page
+              </p>
             </div>
           </div>
         </section>
+
 
         <section className="border-t border-border bg-card/50">
           <div className="mx-auto grid max-w-6xl gap-8 px-6 py-20 md:grid-cols-3">
