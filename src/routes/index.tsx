@@ -114,27 +114,33 @@ function Landing() {
                 body: "Fine-tune any field, switch between templates, and download as PDF or DOCX.",
               },
             ].map((f) => (
-              <div key={f.title} className="rounded-xl border border-border bg-background p-6">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-accent/20 text-accent-foreground">
-                  <f.icon className="h-5 w-5" />
+              <div key={f.title} className="rounded-xl border border-border bg-background p-8 paper-card">
+                <div className="flex h-14 w-14 items-center justify-center rounded-lg bg-accent/20 text-accent-foreground">
+                  <f.icon className="h-7 w-7" />
                 </div>
-                <h3 className="mt-4 font-serif text-xl">{f.title}</h3>
-                <p className="mt-2 text-sm text-muted-foreground">{f.body}</p>
+                <h3 className="mt-5 font-serif text-3xl">{f.title}</h3>
+                <p className="mt-3 text-lg leading-relaxed text-muted-foreground">{f.body}</p>
               </div>
             ))}
           </div>
         </section>
 
         <section className="mx-auto max-w-6xl px-6 py-24 text-center">
-          <h2 className="font-serif text-4xl">Ready to build your team's resume?</h2>
-          <p className="mx-auto mt-3 max-w-xl text-muted-foreground">
+          <div className="mb-6 flex justify-center gap-6 text-primary/60">
+            <Coffee className="h-8 w-8" strokeWidth={1.5} />
+            <PenLine className="h-8 w-8" strokeWidth={1.5} />
+            <BookOpen className="h-8 w-8" strokeWidth={1.5} />
+          </div>
+          <h2 className="font-serif text-5xl md:text-6xl">Ready to build your team's resume?</h2>
+          <p className="mx-auto mt-4 max-w-2xl text-xl text-muted-foreground">
             Sign up free and generate your first team resume in minutes.
           </p>
-          <Link to="/auth" search={{ mode: "signup" }} className="mt-8 inline-block">
-            <Button size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90">
+          <Link to="/auth" search={{ mode: "signup" }} className="mt-10 inline-block">
+            <Button size="lg" className="h-14 px-8 text-lg bg-primary text-primary-foreground hover:bg-primary/90">
               Get started
             </Button>
           </Link>
+
         </section>
       </main>
 
