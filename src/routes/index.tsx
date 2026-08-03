@@ -1,6 +1,20 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
-import { FileText, Sparkles, Users, Download } from "lucide-react";
+import {
+  FileText,
+  Sparkles,
+  Users,
+  Download,
+  Laptop,
+  Coffee,
+  PenLine,
+  BookOpen,
+  Smartphone,
+  Pencil,
+  StickyNote,
+  Ruler,
+  Paperclip,
+} from "lucide-react";
 
 export const Route = createFileRoute("/")({
   component: Landing,
