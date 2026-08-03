@@ -33,10 +33,6 @@ function Landing() {
       <main>
         <section className="mx-auto max-w-6xl px-6 py-24">
           <div className="max-w-3xl">
-            <div className="inline-flex items-center gap-2 rounded-full border border-accent/40 bg-accent/10 px-3 py-1 text-xs font-medium text-foreground/80">
-              <Sparkles className="h-3 w-3" />
-              Powered by AI
-            </div>
             <h1 className="mt-6 font-serif text-5xl leading-[1.05] tracking-tight md:text-6xl">
               One team.
               <br />
