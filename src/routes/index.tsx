@@ -33,35 +33,30 @@ function Landing() {
       </header>
 
       <main>
-        <section className="mx-auto max-w-6xl px-6 py-20 lg:py-28">
-          <div className="grid items-center gap-12 lg:grid-cols-[1.15fr_1fr]">
-            <div>
-              <h1 className="font-serif text-6xl leading-[1.02] tracking-tight md:text-7xl lg:text-8xl">
-                One team.
-                <br />
-                <span className="text-accent">One resume.</span>
-              </h1>
-              <p className="mt-8 max-w-2xl text-xl leading-relaxed text-muted-foreground md:text-2xl">
-                Combine multiple resumes into a single, polished team resume. Upload PDFs or DOCX
-                files, let AI merge them into a unified story, then edit, restyle, and export.
-              </p>
-              <div className="mt-10 flex flex-wrap gap-4">
-                <Link to="/auth" search={{ mode: "signup" }}>
-                  <Button
-                    size="lg"
-                    className="h-14 px-8 text-lg bg-primary text-primary-foreground hover:bg-primary/90"
-                  >
-                    Build your team resume
-                  </Button>
-                </Link>
-                <Link to="/auth">
-                  <Button size="lg" variant="outline" className="h-14 px-8 text-lg">
-                    Sign in
-                  </Button>
-                </Link>
-              </div>
-            </div>
-
+        <section className="mx-auto max-w-4xl px-6 py-20 text-center lg:py-28">
+          <h1 className="font-serif text-6xl leading-[1.02] tracking-tight md:text-7xl lg:text-8xl">
+            One team.
+            <br />
+            <span className="text-accent">One resume.</span>
+          </h1>
+          <p className="mx-auto mt-8 max-w-2xl text-xl leading-relaxed text-muted-foreground md:text-2xl">
+            Combine multiple resumes into a single, polished team resume. Upload PDFs or DOCX
+            files, let AI merge them into a unified story, then edit, restyle, and export.
+          </p>
+          <div className="mt-10 flex flex-wrap justify-center gap-4">
+            <Link to="/auth" search={{ mode: "signup" }}>
+              <Button
+                size="lg"
+                className="h-14 px-8 text-lg bg-primary text-primary-foreground hover:bg-primary/90"
+              >
+                Build your team resume
+              </Button>
+            </Link>
+            <Link to="/auth">
+              <Button size="lg" variant="outline" className="h-14 px-8 text-lg">
+                Sign in
+              </Button>
+            </Link>
           </div>
         </section>
 
