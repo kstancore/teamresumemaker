@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { Users, ArrowLeft } from "lucide-react";
+import { DoodleBackground } from "@/components/doodle-background";
 
 const searchSchema = z.object({ mode: z.enum(["signin", "signup"]).optional() });
 
@@ -73,6 +74,7 @@ function AuthPage() {
 
   return (
     <div className="paper flex min-h-screen items-center justify-center px-4">
+      <DoodleBackground />
       <div className="w-full max-w-md">
         <Button
           variant="ghost"

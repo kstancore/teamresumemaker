@@ -13,6 +13,7 @@ import { toast } from "sonner";
 import { FilePlus2, Trash2, LogOut, Users, FileText, ArrowLeft } from "lucide-react";
 import { useState } from "react";
 import {
+import { DoodleBackground } from "@/components/doodle-background";
   AlertDialog,
   AlertDialogAction,
   AlertDialogCancel,
@@ -70,6 +71,7 @@ function Workspace() {
 
   return (
     <div className="paper min-h-screen">
+      <DoodleBackground />
       <header className="border-b border-border">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
           <div className="flex items-center gap-2">
