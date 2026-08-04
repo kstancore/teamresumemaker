@@ -1,3 +1,4 @@
+import { DoodleBackground } from "@/components/doodle-background";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
@@ -13,7 +14,6 @@ import { toast } from "sonner";
 import { FilePlus2, Trash2, LogOut, Users, FileText, ArrowLeft } from "lucide-react";
 import { useState } from "react";
 import {
-import { DoodleBackground } from "@/components/doodle-background";
   AlertDialog,
   AlertDialogAction,
   AlertDialogCancel,

@@ -1,7 +1,7 @@
+import { DoodleBackground } from "@/components/doodle-background";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import {
-import { DoodleBackground } from "@/components/doodle-background";
   FileText,
   Sparkles,
   Users,

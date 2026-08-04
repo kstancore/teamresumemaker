@@ -1,3 +1,4 @@
+import { DoodleBackground } from "@/components/doodle-background";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
@@ -37,7 +38,6 @@ import {
 import type { TeamResume, TemplateId } from "@/lib/resume-types";
 import { emptyTeamResume } from "@/lib/resume-types";
 import { downloadPdf, downloadDocx } from "@/lib/export";
-import { DoodleBackground } from "@/components/doodle-background";
 
 export const Route = createFileRoute("/_authenticated/workspace/$projectId")({
   component: Editor,
