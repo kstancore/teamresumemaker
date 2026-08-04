@@ -73,7 +73,7 @@ function AuthPage() {
   }
 
   return (
-    <div className="paper flex min-h-screen items-center justify-center px-4">
+    <div className="paper isolate flex min-h-screen items-center justify-center px-4">
       <DoodleBackground />
       <div className="w-full max-w-md">
         <Button

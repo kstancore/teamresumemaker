@@ -70,7 +70,7 @@ function Workspace() {
   }
 
   return (
-    <div className="paper min-h-screen">
+    <div className="paper isolate min-h-screen">
       <DoodleBackground />
       <header className="border-b border-border">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">

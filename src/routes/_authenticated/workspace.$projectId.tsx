@@ -219,7 +219,7 @@ function Editor() {
   }
 
   return (
-    <div className="paper min-h-screen">
+    <div className="paper isolate min-h-screen">
       <DoodleBackground />
       <header className="sticky top-0 z-10 border-b border-border bg-background/80 backdrop-blur">
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-6 py-3">
