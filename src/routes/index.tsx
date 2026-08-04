@@ -62,23 +62,6 @@ function Landing() {
               </div>
             </div>
 
-            {/* Desk doodles */}
-            <div className="relative mx-auto grid w-full max-w-md grid-cols-3 gap-4 text-primary/70">
-              {[Laptop, Coffee, PenLine, BookOpen, Smartphone, Pencil, StickyNote, Ruler, Paperclip].map(
-                (Icon, i) => (
-                  <div
-                    key={i}
-                    className="flex aspect-square items-center justify-center rounded-2xl border border-border bg-card/70 paper-card"
-                    style={{ transform: `rotate(${(i % 3) - 1}deg)` }}
-                  >
-                    <Icon className="h-9 w-9 md:h-11 md:w-11" strokeWidth={1.5} />
-                  </div>
-                ),
-              )}
-              <p className="note-hand col-span-3 text-center text-2xl text-accent-foreground/80">
-                everything on your desk, in one page
-              </p>
-            </div>
           </div>
         </section>
 
