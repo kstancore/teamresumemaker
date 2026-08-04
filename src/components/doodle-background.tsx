@@ -63,14 +63,14 @@ export function DoodleBackground() {
       className="pointer-events-none absolute inset-0 -z-10 overflow-hidden"
     >
       {/* soft ink blooms for depth */}
-      <div className="absolute -left-24 top-10 h-72 w-72 rounded-full bg-accent/10 blur-3xl" />
-      <div className="absolute -right-24 top-1/3 h-80 w-80 rounded-full bg-primary/10 blur-3xl" />
-      <div className="absolute bottom-0 left-1/3 h-72 w-72 rounded-full bg-accent/10 blur-3xl" />
+      <div className="absolute -left-24 top-10 h-72 w-72 rounded-full bg-accent/25 blur-3xl" />
+      <div className="absolute -right-24 top-1/3 h-80 w-80 rounded-full bg-primary/20 blur-3xl" />
+      <div className="absolute bottom-0 left-1/3 h-72 w-72 rounded-full bg-accent/25 blur-3xl" />
 
       {DOODLES.map(({ Icon, top, left, size, rotate }, i) => (
         <Icon
           key={i}
-          className="absolute text-primary/[0.13]"
+          className="absolute text-primary/25"
           strokeWidth={1.25}
           style={{
             top,
@@ -84,7 +84,7 @@ export function DoodleBackground() {
 
       {/* scribbled arrows & underlines */}
       <svg
-        className="absolute inset-0 h-full w-full text-accent/25"
+        className="absolute inset-0 h-full w-full text-accent/50"
         preserveAspectRatio="none"
         viewBox="0 0 100 100"
         fill="none"
@@ -92,19 +92,19 @@ export function DoodleBackground() {
         <path
           d="M6 26 C14 21, 22 31, 30 25"
           stroke="currentColor"
-          strokeWidth="0.35"
+          strokeWidth="0.45"
           strokeLinecap="round"
         />
         <path
           d="M70 60 C78 55, 86 65, 94 58"
           stroke="currentColor"
-          strokeWidth="0.35"
+          strokeWidth="0.45"
           strokeLinecap="round"
         />
         <path
           d="M20 82 C30 78, 40 86, 50 80"
           stroke="currentColor"
-          strokeWidth="0.35"
+          strokeWidth="0.45"
           strokeLinecap="round"
         />
         <circle cx="58" cy="14" r="3.2" stroke="currentColor" strokeWidth="0.3" />
