@@ -1,3 +1,4 @@
+import { DoodleBackground } from "@/components/doodle-background";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import {
@@ -22,7 +23,8 @@ export const Route = createFileRoute("/")({
 
 function Landing() {
   return (
-    <div className="paper min-h-screen">
+    <div className="paper isolate min-h-screen">
+      <DoodleBackground />
       <header className="border-b border-border">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
           <Link to="/" className="flex items-center gap-2">

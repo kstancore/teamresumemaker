@@ -1,3 +1,4 @@
+import { DoodleBackground } from "@/components/doodle-background";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { z } from "zod";
@@ -72,7 +73,8 @@ function AuthPage() {
   }
 
   return (
-    <div className="paper flex min-h-screen items-center justify-center px-4">
+    <div className="paper isolate flex min-h-screen items-center justify-center px-4">
+      <DoodleBackground />
       <div className="w-full max-w-md">
         <Button
           variant="ghost"

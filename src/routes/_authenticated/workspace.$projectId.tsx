@@ -1,3 +1,4 @@
+import { DoodleBackground } from "@/components/doodle-background";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
@@ -218,7 +219,8 @@ function Editor() {
   }
 
   return (
-    <div className="paper min-h-screen">
+    <div className="paper isolate min-h-screen">
+      <DoodleBackground />
       <header className="sticky top-0 z-10 border-b border-border bg-background/80 backdrop-blur">
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-6 py-3">
           <div className="flex min-w-0 items-center gap-3">
