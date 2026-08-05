@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { FilePlus2, Trash2, LogOut, Users, FileText, ArrowLeft } from "lucide-react";
+import { FilePlus2, Trash2, LogOut, Users, FileText, ArrowLeft, UserCircle2 } from "lucide-react";
 import { useState } from "react";
 import {
   AlertDialog,
