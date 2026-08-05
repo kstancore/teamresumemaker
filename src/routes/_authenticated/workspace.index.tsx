@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { FilePlus2, Trash2, LogOut, Users, FileText, ArrowLeft } from "lucide-react";
+import { FilePlus2, Trash2, LogOut, Users, FileText, ArrowLeft, UserCircle2 } from "lucide-react";
 import { useState } from "react";
 import {
   AlertDialog,
@@ -85,9 +85,15 @@ function Workspace() {
               <span className="font-serif text-lg font-semibold">Team Resume Maker</span>
             </Link>
           </div>
-          <Button variant="ghost" size="sm" onClick={signOut}>
-            <LogOut className="mr-2 h-4 w-4" /> Sign out
-          </Button>
+          <div className="flex items-center gap-1">
+            <Button variant="ghost" size="sm" onClick={() => navigate({ to: "/profile" })}>
+              <UserCircle2 className="mr-2 h-4 w-4" /> My account
+            </Button>
+            <Button variant="ghost" size="sm" onClick={signOut}>
+              <LogOut className="mr-2 h-4 w-4" /> Sign out
+            </Button>
+          </div>
+
         </div>
       </header>
 
