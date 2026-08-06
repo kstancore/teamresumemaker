@@ -3,14 +3,13 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useEffect, useRef, useState } from "react";
-import { getMyProfile, saveMyProfile, type WorkHistoryItem } from "@/lib/profile.functions";
-import { listProjects } from "@/lib/projects.functions";
+import { getMyProfile, saveMyProfile } from "@/lib/profile.functions";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
-import { ArrowLeft, Camera, Users, Save, FileText } from "lucide-react";
+import { ArrowLeft, Camera, Users, Save } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/profile")({
   component: ProfilePage,
@@ -20,12 +19,12 @@ export const Route = createFileRoute("/_authenticated/profile")({
       {
         name: "description",
         content:
-          "Create your Team Resume Maker account profile: photo, name, date of birth, email and your previous work history.",
+          "Create your Team Resume Maker account profile: photo, name, date of birth, and email.",
       },
       { property: "og:title", content: "Your Account — Team Resume Maker" },
       {
         property: "og:description",
-        content: "Set up your profile photo, details and work history.",
+        content: "Set up your profile photo and details.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
@@ -37,8 +36,6 @@ export const Route = createFileRoute("/_authenticated/profile")({
   notFoundComponent: () => <div className="p-10 text-center">Not found</div>,
 });
 
-const emptyWork: WorkHistoryItem = { role: "", organization: "", period: "", description: "" };
-
 function ProfilePage() {
   const loadFn = useServerFn(getMyProfile);
   const saveFn = useServerFn(saveMyProfile);
@@ -46,20 +43,13 @@ function ProfilePage() {
   const navigate = useNavigate();
   const fileRef = useRef<HTMLInputElement>(null);
 
-  const listFn = useServerFn(listProjects);
-
   const { data, isLoading } = useQuery({ queryKey: ["my-profile"], queryFn: () => loadFn() });
-  const { data: projects, isLoading: projectsLoading } = useQuery({
-    queryKey: ["projects"],
-    queryFn: () => listFn(),
-  });
 
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [dob, setDob] = useState("");
   const [avatarPath, setAvatarPath] = useState<string | null>(null);
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
-  const [work, setWork] = useState<WorkHistoryItem[]>([]);
   const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
@@ -69,8 +59,6 @@ function ProfilePage() {
     setDob(data.profile?.date_of_birth ?? "");
     setAvatarPath(data.profile?.avatar_url ?? null);
     setAvatarPreview(data.avatarSignedUrl ?? null);
-    const wh = (data.profile?.work_history as WorkHistoryItem[] | null) ?? [];
-    setWork(Array.isArray(wh) && wh.length ? wh : [{ ...emptyWork }]);
   }, [data]);
 
   const saveM = useMutation({
@@ -81,9 +69,7 @@ function ProfilePage() {
           email: email.trim(),
           date_of_birth: dob ? dob : null,
           avatar_url: avatarPath,
-          work_history: work.filter(
-            (w) => w.role.trim() || w.organization.trim() || w.description.trim(),
-          ),
+          work_history: [],
         },
       }),
     onSuccess: () => {
@@ -152,7 +138,7 @@ function ProfilePage() {
       <main className="mx-auto max-w-4xl px-6 py-10">
         <h1 className="font-serif text-3xl md:text-4xl">Your account</h1>
         <p className="mt-1 text-muted-foreground">
-          Add your photo, details and previous work so they can flow into your team resumes.
+          Add your photo and details to personalize your account.
         </p>
 
         {isLoading ? (
@@ -229,50 +215,6 @@ function ProfilePage() {
                     required
                   />
                 </div>
-              </div>
-            </section>
-
-            <section className="rounded-2xl border border-border bg-card p-6 shadow-sm">
-              <div>
-                <h2 className="font-serif text-xl">Your previous work</h2>
-                <p className="text-sm text-muted-foreground">
-                  Team resumes you've built here in Team Resume Maker.
-                </p>
-              </div>
-
-              <div className="mt-5 space-y-3">
-                {projectsLoading ? (
-                  <p className="text-sm text-muted-foreground">Loading your work…</p>
-                ) : !projects || projects.length === 0 ? (
-                  <p className="text-sm text-muted-foreground">
-                    You haven't created any team resumes yet.{" "}
-                    <Link to="/workspace" className="underline">
-                      Start one in your workspace
-                    </Link>
-                    .
-                  </p>
-                ) : (
-                  projects.map((p) => (
-                    <Link
-                      key={p.id}
-                      to="/workspace/$projectId"
-                      params={{ projectId: p.id }}
-                      className="flex items-center justify-between rounded-xl border border-border/70 p-4 transition-colors hover:bg-muted/50"
-                    >
-                      <div>
-                        <p className="font-medium">{p.name}</p>
-                        <p className="text-xs text-muted-foreground">
-                          {p.merged_resume ? "Team resume generated" : "Draft — not generated yet"} ·
-                          Updated {new Date(p.updated_at).toLocaleDateString()}
-                        </p>
-                      </div>
-                      <span className="flex items-center gap-1 text-xs text-muted-foreground capitalize">
-                        <FileText className="h-4 w-4" />
-                        {p.template}
-                      </span>
-                    </Link>
-                  ))
-                )}
               </div>
             </section>
 
