@@ -225,50 +225,6 @@ function ProfilePage() {
               </div>
             </section>
 
-            <section className="rounded-2xl border border-border bg-card p-6 shadow-sm">
-              <div>
-                <h2 className="font-serif text-xl">Your previous work</h2>
-                <p className="text-sm text-muted-foreground">
-                  Team resumes you've built here in Team Resume Maker.
-                </p>
-              </div>
-
-              <div className="mt-5 space-y-3">
-                {projectsLoading ? (
-                  <p className="text-sm text-muted-foreground">Loading your work…</p>
-                ) : !projects || projects.length === 0 ? (
-                  <p className="text-sm text-muted-foreground">
-                    You haven't created any team resumes yet.{" "}
-                    <Link to="/workspace" className="underline">
-                      Start one in your workspace
-                    </Link>
-                    .
-                  </p>
-                ) : (
-                  projects.map((p) => (
-                    <Link
-                      key={p.id}
-                      to="/workspace/$projectId"
-                      params={{ projectId: p.id }}
-                      className="flex items-center justify-between rounded-xl border border-border/70 p-4 transition-colors hover:bg-muted/50"
-                    >
-                      <div>
-                        <p className="font-medium">{p.name}</p>
-                        <p className="text-xs text-muted-foreground">
-                          {p.merged_resume ? "Team resume generated" : "Draft — not generated yet"} ·
-                          Updated {new Date(p.updated_at).toLocaleDateString()}
-                        </p>
-                      </div>
-                      <span className="flex items-center gap-1 text-xs text-muted-foreground capitalize">
-                        <FileText className="h-4 w-4" />
-                        {p.template}
-                      </span>
-                    </Link>
-                  ))
-                )}
-              </div>
-            </section>
-
             <Button
               type="submit"
               disabled={saveM.isPending}
