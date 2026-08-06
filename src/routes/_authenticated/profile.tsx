@@ -4,13 +4,13 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useEffect, useRef, useState } from "react";
 import { getMyProfile, saveMyProfile, type WorkHistoryItem } from "@/lib/profile.functions";
+import { listProjects } from "@/lib/projects.functions";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
-import { ArrowLeft, Camera, Plus, Trash2, Users, Save } from "lucide-react";
+import { ArrowLeft, Camera, Users, Save, FileText } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/profile")({
   component: ProfilePage,
@@ -46,7 +46,13 @@ function ProfilePage() {
   const navigate = useNavigate();
   const fileRef = useRef<HTMLInputElement>(null);
 
+  const listFn = useServerFn(listProjects);
+
   const { data, isLoading } = useQuery({ queryKey: ["my-profile"], queryFn: () => loadFn() });
+  const { data: projects, isLoading: projectsLoading } = useQuery({
+    queryKey: ["projects"],
+    queryFn: () => listFn(),
+  });
 
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
@@ -121,9 +127,8 @@ function ProfilePage() {
     }
   }
 
-  function updateWork(i: number, patch: Partial<WorkHistoryItem>) {
-    setWork((prev) => prev.map((w, idx) => (idx === i ? { ...w, ...patch } : w)));
-  }
+
+
 
   return (
     <div className="paper isolate min-h-screen">
@@ -228,79 +233,46 @@ function ProfilePage() {
             </section>
 
             <section className="rounded-2xl border border-border bg-card p-6 shadow-sm">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h2 className="font-serif text-xl">Previous work history</h2>
-                  <p className="text-sm text-muted-foreground">
-                    Roles you've held before — these give the AI extra context.
-                  </p>
-                </div>
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setWork((p) => [...p, { ...emptyWork }])}
-                >
-                  <Plus className="mr-1 h-4 w-4" /> Add
-                </Button>
+              <div>
+                <h2 className="font-serif text-xl">Your previous work</h2>
+                <p className="text-sm text-muted-foreground">
+                  Team resumes you've built here in Team Resume Maker.
+                </p>
               </div>
 
-              <div className="mt-5 space-y-5">
-                {work.map((item, i) => (
-                  <div key={i} className="rounded-xl border border-border/70 p-4">
-                    <div className="grid gap-3 sm:grid-cols-3">
+              <div className="mt-5 space-y-3">
+                {projectsLoading ? (
+                  <p className="text-sm text-muted-foreground">Loading your work…</p>
+                ) : !projects || projects.length === 0 ? (
+                  <p className="text-sm text-muted-foreground">
+                    You haven't created any team resumes yet.{" "}
+                    <Link to="/workspace" className="underline">
+                      Start one in your workspace
+                    </Link>
+                    .
+                  </p>
+                ) : (
+                  projects.map((p) => (
+                    <Link
+                      key={p.id}
+                      to="/workspace/$projectId"
+                      params={{ projectId: p.id }}
+                      className="flex items-center justify-between rounded-xl border border-border/70 p-4 transition-colors hover:bg-muted/50"
+                    >
                       <div>
-                        <Label htmlFor={`role-${i}`}>Role</Label>
-                        <Input
-                          id={`role-${i}`}
-                          value={item.role}
-                          onChange={(e) => updateWork(i, { role: e.target.value })}
-                          placeholder="Frontend Developer"
-                        />
+                        <p className="font-medium">{p.name}</p>
+                        <p className="text-xs text-muted-foreground">
+                          {p.merged_resume ? "Team resume generated" : "Draft — not generated yet"} ·
+                          Updated {new Date(p.updated_at).toLocaleDateString()}
+                        </p>
                       </div>
-                      <div>
-                        <Label htmlFor={`org-${i}`}>Company</Label>
-                        <Input
-                          id={`org-${i}`}
-                          value={item.organization}
-                          onChange={(e) => updateWork(i, { organization: e.target.value })}
-                          placeholder="Acme Inc."
-                        />
-                      </div>
-                      <div>
-                        <Label htmlFor={`period-${i}`}>Period</Label>
-                        <Input
-                          id={`period-${i}`}
-                          value={item.period}
-                          onChange={(e) => updateWork(i, { period: e.target.value })}
-                          placeholder="2022 – 2024"
-                        />
-                      </div>
-                    </div>
-                    <div className="mt-3">
-                      <Label htmlFor={`desc-${i}`}>What you did</Label>
-                      <Textarea
-                        id={`desc-${i}`}
-                        value={item.description}
-                        onChange={(e) => updateWork(i, { description: e.target.value })}
-                        rows={3}
-                        maxLength={2000}
-                      />
-                    </div>
-                    {work.length > 1 && (
-                      <div className="mt-3 flex justify-end">
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => setWork((p) => p.filter((_, idx) => idx !== i))}
-                        >
-                          <Trash2 className="mr-1 h-4 w-4" /> Remove
-                        </Button>
-                      </div>
-                    )}
-                  </div>
-                ))}
+                      <span className="flex items-center gap-1 text-xs text-muted-foreground capitalize">
+                        <FileText className="h-4 w-4" />
+                        {p.template}
+                      </span>
+                    </Link>
+                  ))
+                )}
               </div>
             </section>
 
