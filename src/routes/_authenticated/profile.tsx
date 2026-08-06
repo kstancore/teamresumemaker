@@ -19,12 +19,12 @@ export const Route = createFileRoute("/_authenticated/profile")({
       {
         name: "description",
         content:
-          "Create your Team Resume Maker account profile: photo, name, date of birth, email and your previous work history.",
+          "Create your Team Resume Maker account profile: photo, name, date of birth, and email.",
       },
       { property: "og:title", content: "Your Account — Team Resume Maker" },
       {
         property: "og:description",
-        content: "Set up your profile photo, details and work history.",
+        content: "Set up your profile photo and details.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
