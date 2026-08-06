@@ -45,13 +45,7 @@ function ProfilePage() {
   const navigate = useNavigate();
   const fileRef = useRef<HTMLInputElement>(null);
 
-  const listFn = useServerFn(listProjects);
-
   const { data, isLoading } = useQuery({ queryKey: ["my-profile"], queryFn: () => loadFn() });
-  const { data: projects, isLoading: projectsLoading } = useQuery({
-    queryKey: ["projects"],
-    queryFn: () => listFn(),
-  });
 
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
