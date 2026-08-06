@@ -36,8 +36,6 @@ export const Route = createFileRoute("/_authenticated/profile")({
   notFoundComponent: () => <div className="p-10 text-center">Not found</div>,
 });
 
-const emptyWork: WorkHistoryItem = { role: "", organization: "", period: "", description: "" };
-
 function ProfilePage() {
   const loadFn = useServerFn(getMyProfile);
   const saveFn = useServerFn(saveMyProfile);
@@ -52,7 +50,6 @@ function ProfilePage() {
   const [dob, setDob] = useState("");
   const [avatarPath, setAvatarPath] = useState<string | null>(null);
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
-  const [work, setWork] = useState<WorkHistoryItem[]>([]);
   const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
@@ -62,8 +59,6 @@ function ProfilePage() {
     setDob(data.profile?.date_of_birth ?? "");
     setAvatarPath(data.profile?.avatar_url ?? null);
     setAvatarPreview(data.avatarSignedUrl ?? null);
-    const wh = (data.profile?.work_history as WorkHistoryItem[] | null) ?? [];
-    setWork(Array.isArray(wh) && wh.length ? wh : [{ ...emptyWork }]);
   }, [data]);
 
   const saveM = useMutation({
