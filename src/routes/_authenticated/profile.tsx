@@ -138,7 +138,7 @@ function ProfilePage() {
       <main className="mx-auto max-w-4xl px-6 py-10">
         <h1 className="font-serif text-3xl md:text-4xl">Your account</h1>
         <p className="mt-1 text-muted-foreground">
-          Add your photo, details and previous work so they can flow into your team resumes.
+          Add your photo and details to personalize your account.
         </p>
 
         {isLoading ? (
