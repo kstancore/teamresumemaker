@@ -8,8 +8,12 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { toast } from "sonner";
-import { ArrowLeft, Camera, Users, Save } from "lucide-react";
+import { format, parseISO } from "date-fns";
+import { ArrowLeft, Camera, Users, Save, CalendarIcon } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_authenticated/profile")({
   component: ProfilePage,
@@ -202,7 +206,34 @@ function ProfilePage() {
                 </div>
                 <div>
                   <Label htmlFor="dob">Date of birth</Label>
-                  <Input id="dob" type="date" value={dob} onChange={(e) => setDob(e.target.value)} />
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button
+                        id="dob"
+                        type="button"
+                        variant="outline"
+                        className={cn(
+                          "w-full justify-start text-left font-normal",
+                          !dob && "text-muted-foreground",
+                        )}
+                      >
+                        <CalendarIcon className="mr-2 h-4 w-4" />
+                        {dob ? format(parseISO(dob), "PPP") : <span>Pick a date</span>}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={dob ? parseISO(dob) : undefined}
+                        onSelect={(date) => setDob(date ? format(date, "yyyy-MM-dd") : "")}
+                        initialFocus
+                        captionLayout="dropdown"
+                        fromYear={1940}
+                        toYear={new Date().getFullYear()}
+                        className="p-3 pointer-events-auto"
+                      />
+                    </PopoverContent>
+                  </Popover>
                 </div>
                 <div className="sm:col-span-2">
                   <Label htmlFor="pemail">Email</Label>
