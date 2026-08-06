@@ -69,9 +69,7 @@ function ProfilePage() {
           email: email.trim(),
           date_of_birth: dob ? dob : null,
           avatar_url: avatarPath,
-          work_history: work.filter(
-            (w) => w.role.trim() || w.organization.trim() || w.description.trim(),
-          ),
+          work_history: [],
         },
       }),
     onSuccess: () => {
