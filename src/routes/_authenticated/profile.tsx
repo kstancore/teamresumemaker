@@ -127,9 +127,8 @@ function ProfilePage() {
     }
   }
 
-  function updateWork(i: number, patch: Partial<WorkHistoryItem>) {
-    setWork((prev) => prev.map((w, idx) => (idx === i ? { ...w, ...patch } : w)));
-  }
+
+
 
   return (
     <div className="paper isolate min-h-screen">
