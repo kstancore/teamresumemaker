@@ -12,7 +12,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { toast } from "sonner";
 import { format, parseISO } from "date-fns";
-import { ArrowLeft, Camera, Users, Save, CalendarIcon } from "lucide-react";
+import { ArrowLeft, Camera, Users, Save, CalendarIcon, CheckCircle2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_authenticated/profile")({
@@ -55,6 +55,7 @@ function ProfilePage() {
   const [avatarPath, setAvatarPath] = useState<string | null>(null);
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
+  const [savedAt, setSavedAt] = useState<Date | null>(null);
 
   useEffect(() => {
     if (!data) return;
@@ -76,9 +77,18 @@ function ProfilePage() {
           work_history: [],
         },
       }),
-    onSuccess: () => {
+    onSuccess: (result) => {
+      setFullName(result.profile.full_name);
+      setEmail(result.profile.email ?? "");
+      setDob(result.profile.date_of_birth ?? "");
+      setAvatarPath(result.profile.avatar_url ?? null);
+      setSavedAt(new Date());
+      qc.setQueryData(["my-profile"], (current: typeof data) =>
+        current
+          ? { ...current, profile: result.profile }
+          : { profile: result.profile, avatarSignedUrl: avatarPreview, email: result.profile.email },
+      );
       toast.success("Profile saved");
-      qc.invalidateQueries({ queryKey: ["my-profile"] });
     },
     onError: (e: Error) => toast.error(e.message),
   });
@@ -199,7 +209,10 @@ function ProfilePage() {
                   <Input
                     id="fullName"
                     value={fullName}
-                    onChange={(e) => setFullName(e.target.value)}
+                    onChange={(e) => {
+                      setFullName(e.target.value);
+                      setSavedAt(null);
+                    }}
                     maxLength={120}
                     required
                   />
@@ -225,7 +238,10 @@ function ProfilePage() {
                       <Calendar
                         mode="single"
                         selected={dob ? parseISO(dob) : undefined}
-                        onSelect={(date) => setDob(date ? format(date, "yyyy-MM-dd") : "")}
+                        onSelect={(date) => {
+                          setDob(date ? format(date, "yyyy-MM-dd") : "");
+                          setSavedAt(null);
+                        }}
                         initialFocus
                         captionLayout="dropdown"
                         fromYear={1940}
@@ -241,7 +257,10 @@ function ProfilePage() {
                     id="pemail"
                     type="email"
                     value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    onChange={(e) => {
+                      setEmail(e.target.value);
+                      setSavedAt(null);
+                    }}
                     maxLength={255}
                     required
                   />
@@ -249,14 +268,22 @@ function ProfilePage() {
               </div>
             </section>
 
-            <Button
-              type="submit"
-              disabled={saveM.isPending}
-              className="bg-primary text-primary-foreground hover:bg-primary/90"
-            >
-              <Save className="mr-2 h-4 w-4" />
-              {saveM.isPending ? "Saving…" : "Save profile"}
-            </Button>
+            <div className="flex flex-wrap items-center gap-4">
+              <Button
+                type="submit"
+                disabled={saveM.isPending || uploading}
+                className="bg-primary text-primary-foreground hover:bg-primary/90"
+              >
+                <Save className="mr-2 h-4 w-4" />
+                {saveM.isPending ? "Saving…" : "Save profile"}
+              </Button>
+              {savedAt ? (
+                <p className="flex items-center gap-2 text-sm font-medium text-foreground" role="status">
+                  <CheckCircle2 className="h-4 w-4 text-primary" />
+                  Saved successfully at {format(savedAt, "p")}
+                </p>
+              ) : null}
+            </div>
           </form>
         )}
       </main>
