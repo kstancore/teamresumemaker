@@ -1,23 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
-import { z } from "zod";
-
-const workItemSchema = z.object({
-  role: z.string().max(160).default(""),
-  organization: z.string().max(160).default(""),
-  period: z.string().max(80).default(""),
-  description: z.string().max(2000).default(""),
-});
-
-export type WorkHistoryItem = z.infer<typeof workItemSchema>;
-
-const profileSchema = z.object({
-  full_name: z.string().trim().min(1, "Name is required").max(120),
-  email: z.string().trim().email("Enter a valid email").max(255),
-  date_of_birth: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Use YYYY-MM-DD").nullable().optional(),
-  avatar_url: z.string().max(500).nullable().optional(),
-  work_history: z.array(workItemSchema).max(30).default([]),
-});
+import { profileSchema } from "@/lib/profile.schemas";
+export type { WorkHistoryItem } from "@/lib/profile.schemas";
 
 export const getMyProfile = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
@@ -48,7 +32,7 @@ export const saveMyProfile = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: unknown) => profileSchema.parse(d))
   .handler(async ({ data, context }) => {
-    const { error } = await context.supabase.from("profiles").upsert(
+    const { data: savedProfile, error } = await context.supabase.from("profiles").upsert(
       {
         user_id: context.userId,
         full_name: data.full_name,
@@ -58,7 +42,7 @@ export const saveMyProfile = createServerFn({ method: "POST" })
         work_history: data.work_history,
       },
       { onConflict: "user_id" },
-    );
+    ).select("*").single();
     if (error) throw new Error(error.message);
-    return { ok: true };
+    return { ok: true, profile: savedProfile };
   });
