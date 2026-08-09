@@ -273,7 +273,7 @@ function ProfilePage() {
               </div>
 
               {/* Floating note */}
-              <div className="absolute bottom-6 left-6 hidden max-w-[180px] rotate-[5deg] rounded-lg border border-accent/30 bg-accent p-4 text-sm text-primary-foreground shadow-lg md:block">
+              <div className="absolute bottom-28 left-6 hidden max-w-[180px] rotate-[5deg] rounded-lg border border-accent/30 bg-accent p-4 text-sm text-primary-foreground shadow-lg md:block">
                 <p className="font-hand text-base leading-snug">
                   Profile status: verified. Everything looks great for your next team resume!
                 </p>
