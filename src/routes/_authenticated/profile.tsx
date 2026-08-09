@@ -12,7 +12,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { toast } from "sonner";
 import { format, parseISO } from "date-fns";
-import { ArrowLeft, Camera, Users, Save, CalendarIcon, CheckCircle2 } from "lucide-react";
+import { ArrowLeft, Camera, Users, Save, CalendarIcon, CheckCircle2, Pencil } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_authenticated/profile")({
@@ -56,6 +56,8 @@ function ProfilePage() {
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
   const [savedAt, setSavedAt] = useState<Date | null>(null);
+  const [editing, setEditing] = useState(false);
+  const initialized = useRef(false);
 
   useEffect(() => {
     if (!data) return;
@@ -64,7 +66,12 @@ function ProfilePage() {
     setDob(data.profile?.date_of_birth ?? "");
     setAvatarPath(data.profile?.avatar_url ?? null);
     setAvatarPreview(data.avatarSignedUrl ?? null);
+    if (!initialized.current) {
+      initialized.current = true;
+      setEditing(!data.profile?.full_name);
+    }
   }, [data]);
+
 
   const saveM = useMutation({
     mutationFn: () =>
@@ -83,6 +90,8 @@ function ProfilePage() {
       setDob(result.profile.date_of_birth ?? "");
       setAvatarPath(result.profile.avatar_url ?? null);
       setSavedAt(new Date());
+      setEditing(false);
+
       qc.setQueryData(["my-profile"], (current: typeof data) =>
         current
           ? { ...current, profile: result.profile }
@@ -152,12 +161,73 @@ function ProfilePage() {
       <main className="mx-auto max-w-4xl px-6 py-10">
         <h1 className="font-serif text-3xl md:text-4xl">Your account</h1>
         <p className="mt-1 text-muted-foreground">
-          Add your photo and details to personalize your account.
+          {editing
+            ? "Add your photo and details to personalize your account."
+            : "Here are the details you saved. Use Edit to make changes."}
         </p>
 
         {isLoading ? (
           <p className="mt-10 text-sm text-muted-foreground">Loading your profile…</p>
+        ) : !editing ? (
+          <div className="mt-8 space-y-6">
+            <section className="rounded-2xl border border-border bg-card p-6 shadow-sm">
+              <div className="flex flex-col items-center gap-5 sm:flex-row sm:items-center">
+                <div className="flex h-24 w-24 items-center justify-center overflow-hidden rounded-full border border-border bg-muted">
+                  {avatarPreview ? (
+                    <img
+                      src={avatarPreview}
+                      alt={fullName ? `${fullName}'s profile picture` : "Profile picture"}
+                      className="h-full w-full object-cover"
+                    />
+                  ) : (
+                    <Camera className="h-7 w-7 text-muted-foreground" />
+                  )}
+                </div>
+                <div>
+                  <p className="font-serif text-2xl">{fullName || "Unnamed"}</p>
+                  <p className="text-sm text-muted-foreground">{email || "No email saved"}</p>
+                </div>
+              </div>
+
+              <dl className="mt-6 grid gap-4 sm:grid-cols-2">
+                <div className="rounded-xl border border-border/70 p-4">
+                  <dt className="text-xs uppercase tracking-wide text-muted-foreground">Full name</dt>
+                  <dd className="mt-1 text-base">{fullName || "—"}</dd>
+                </div>
+                <div className="rounded-xl border border-border/70 p-4">
+                  <dt className="text-xs uppercase tracking-wide text-muted-foreground">
+                    Date of birth
+                  </dt>
+                  <dd className="mt-1 text-base">{dob ? format(parseISO(dob), "PPP") : "—"}</dd>
+                </div>
+                <div className="rounded-xl border border-border/70 p-4 sm:col-span-2">
+                  <dt className="text-xs uppercase tracking-wide text-muted-foreground">Email</dt>
+                  <dd className="mt-1 text-base break-words">{email || "—"}</dd>
+                </div>
+              </dl>
+            </section>
+
+            <div className="flex flex-wrap items-center gap-4">
+              <Button
+                type="button"
+                onClick={() => {
+                  setSavedAt(null);
+                  setEditing(true);
+                }}
+                className="bg-primary text-primary-foreground hover:bg-primary/90"
+              >
+                <Pencil className="mr-2 h-4 w-4" /> Edit details
+              </Button>
+              {savedAt ? (
+                <p className="flex items-center gap-2 text-sm font-medium text-foreground" role="status">
+                  <CheckCircle2 className="h-4 w-4 text-primary" />
+                  Saved successfully at {format(savedAt, "p")}
+                </p>
+              ) : null}
+            </div>
+          </div>
         ) : (
+
           <form
             className="mt-8 space-y-8"
             onSubmit={(e) => {
@@ -277,13 +347,25 @@ function ProfilePage() {
                 <Save className="mr-2 h-4 w-4" />
                 {saveM.isPending ? "Saving…" : "Save profile"}
               </Button>
-              {savedAt ? (
-                <p className="flex items-center gap-2 text-sm font-medium text-foreground" role="status">
-                  <CheckCircle2 className="h-4 w-4 text-primary" />
-                  Saved successfully at {format(savedAt, "p")}
-                </p>
+              {data?.profile?.full_name ? (
+                <Button
+                  type="button"
+                  variant="outline"
+                  disabled={saveM.isPending}
+                  onClick={() => {
+                    setFullName(data.profile?.full_name ?? "");
+                    setEmail(data.profile?.email ?? data.email ?? "");
+                    setDob(data.profile?.date_of_birth ?? "");
+                    setAvatarPath(data.profile?.avatar_url ?? null);
+                    setAvatarPreview(data.avatarSignedUrl ?? null);
+                    setEditing(false);
+                  }}
+                >
+                  Cancel
+                </Button>
               ) : null}
             </div>
+
           </form>
         )}
       </main>
