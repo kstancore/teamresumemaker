@@ -12,7 +12,18 @@ import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { toast } from "sonner";
 import { format, parseISO } from "date-fns";
-import { ArrowLeft, Camera, Users, Save, CalendarIcon, CheckCircle2, Pencil } from "lucide-react";
+import {
+  ArrowLeft,
+  Camera,
+  Users,
+  Save,
+  CalendarIcon,
+  CheckCircle2,
+  Pencil,
+  X,
+  Plus,
+  Star,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_authenticated/profile")({
@@ -39,6 +50,19 @@ export const Route = createFileRoute("/_authenticated/profile")({
   ),
   notFoundComponent: () => <div className="p-10 text-center">Not found</div>,
 });
+
+function SpiralDivider() {
+  return (
+    <div className="hidden w-6 shrink-0 flex-col justify-around border-x border-border bg-muted py-8 shadow-inner md:flex">
+      {Array.from({ length: 10 }).map((_, i) => (
+        <div
+          key={i}
+          className="mx-auto h-3 w-3 rounded-full border border-border bg-card shadow-sm"
+        />
+      ))}
+    </div>
+  );
+}
 
 function ProfilePage() {
   const loadFn = useServerFn(getMyProfile);
@@ -71,7 +95,6 @@ function ProfilePage() {
       setEditing(!data.profile?.full_name);
     }
   }, [data]);
-
 
   const saveM = useMutation({
     mutationFn: () =>
@@ -136,14 +159,25 @@ function ProfilePage() {
     }
   }
 
+  function resetToSaved() {
+    setFullName(data?.profile?.full_name ?? "");
+    setEmail(data?.profile?.email ?? data?.email ?? "");
+    setDob(data?.profile?.date_of_birth ?? "");
+    setAvatarPath(data?.profile?.avatar_url ?? null);
+    setAvatarPreview(data?.avatarSignedUrl ?? null);
+    setSavedAt(null);
+  }
 
-
+  const displayName = fullName || "Unnamed";
+  const displayEmail = email || data?.email || "No email saved";
+  const displayDob = dob ? format(parseISO(dob), "PPP") : "—";
 
   return (
     <div className="paper isolate min-h-screen">
       <DoodleBackground />
-      <header className="border-b border-border">
-        <div className="mx-auto flex max-w-4xl items-center justify-between px-6 py-4">
+
+      <header className="relative z-10 border-b border-border">
+        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
           <div className="flex items-center gap-2">
             <Button variant="ghost" size="sm" onClick={() => navigate({ to: "/workspace" })}>
               <ArrowLeft className="mr-1 h-4 w-4" /> Back to workspace
@@ -158,215 +192,360 @@ function ProfilePage() {
         </div>
       </header>
 
-      <main className="mx-auto max-w-4xl px-6 py-10">
-        <h1 className="font-serif text-3xl md:text-4xl">Your account</h1>
-        <p className="mt-1 text-muted-foreground">
-          {editing
-            ? "Add your photo and details to personalize your account."
-            : "Here are the details you saved. Use Edit to make changes."}
-        </p>
-
+      <main className="relative z-10 mx-auto flex max-w-6xl items-center justify-center px-4 py-8 md:px-6 md:py-12">
         {isLoading ? (
-          <p className="mt-10 text-sm text-muted-foreground">Loading your profile…</p>
-        ) : !editing ? (
-          <div className="mt-8 space-y-6">
-            <section className="rounded-2xl border border-border bg-card p-6 shadow-sm">
-              <div className="flex flex-col items-center gap-5 sm:flex-row sm:items-center">
-                <div className="flex h-24 w-24 items-center justify-center overflow-hidden rounded-full border border-border bg-muted">
-                  {avatarPreview ? (
-                    <img
-                      src={avatarPreview}
-                      alt={fullName ? `${fullName}'s profile picture` : "Profile picture"}
-                      className="h-full w-full object-cover"
-                    />
-                  ) : (
-                    <Camera className="h-7 w-7 text-muted-foreground" />
-                  )}
-                </div>
-                <div>
-                  <p className="font-serif text-2xl">{fullName || "Unnamed"}</p>
-                  <p className="text-sm text-muted-foreground">{email || "No email saved"}</p>
-                </div>
+          <p className="text-sm text-muted-foreground">Loading your profile…</p>
+        ) : (
+          <div className="w-full max-w-5xl overflow-hidden rounded-[2rem] border border-border bg-card shadow-[0_20px_50px_rgba(10,17,40,0.12)] md:flex md:h-[720px]">
+            {/* Left panel — identity summary */}
+            <div className="relative flex w-full flex-col items-center overflow-hidden bg-primary px-8 py-10 text-primary-foreground md:w-5/12 md:px-10 md:py-12">
+              <div className="absolute left-8 top-8 -rotate-12 select-none font-hand text-4xl text-accent/20">
+                Team Resume
               </div>
 
-              <dl className="mt-6 grid gap-4 sm:grid-cols-2">
-                <div className="rounded-xl border border-border/70 p-4">
-                  <dt className="text-xs uppercase tracking-wide text-muted-foreground">Full name</dt>
-                  <dd className="mt-1 text-base">{fullName || "—"}</dd>
-                </div>
-                <div className="rounded-xl border border-border/70 p-4">
-                  <dt className="text-xs uppercase tracking-wide text-muted-foreground">
-                    Date of birth
-                  </dt>
-                  <dd className="mt-1 text-base">{dob ? format(parseISO(dob), "PPP") : "—"}</dd>
-                </div>
-                <div className="rounded-xl border border-border/70 p-4 sm:col-span-2">
-                  <dt className="text-xs uppercase tracking-wide text-muted-foreground">Email</dt>
-                  <dd className="mt-1 text-base break-words">{email || "—"}</dd>
-                </div>
-              </dl>
-            </section>
-
-            <div className="flex flex-wrap items-center gap-4">
-              <Button
-                type="button"
-                onClick={() => {
-                  setSavedAt(null);
-                  setEditing(true);
-                }}
-                className="bg-primary text-primary-foreground hover:bg-primary/90"
-              >
-                <Pencil className="mr-2 h-4 w-4" /> Edit details
-              </Button>
-              {savedAt ? (
-                <p className="flex items-center gap-2 text-sm font-medium text-foreground" role="status">
-                  <CheckCircle2 className="h-4 w-4 text-primary" />
-                  Saved successfully at {format(savedAt, "p")}
-                </p>
-              ) : null}
-            </div>
-          </div>
-        ) : (
-
-          <form
-            className="mt-8 space-y-8"
-            onSubmit={(e) => {
-              e.preventDefault();
-              if (!fullName.trim()) return toast.error("Please enter your name");
-              if (!email.trim()) return toast.error("Please enter your email");
-              saveM.mutate();
-            }}
-          >
-            <section className="rounded-2xl border border-border bg-card p-6 shadow-sm">
-              <div className="flex flex-col items-center gap-4 sm:flex-row sm:items-end">
-                <div className="relative">
-                  <div className="flex h-24 w-24 items-center justify-center overflow-hidden rounded-full border border-border bg-muted">
+              {/* Polaroid avatar */}
+              <div className="relative mt-6 md:mt-10">
+                <div className="w-44 rotate-[-3deg] bg-card p-3 pb-8 shadow-xl transition-transform duration-300 hover:rotate-0 md:w-48">
+                  <div className="relative aspect-square overflow-hidden bg-muted">
                     {avatarPreview ? (
                       <img
                         src={avatarPreview}
-                        alt={fullName ? `${fullName}'s profile picture` : "Profile picture"}
+                        alt={displayName ? `${displayName}'s profile picture` : "Profile picture"}
                         className="h-full w-full object-cover"
                       />
                     ) : (
-                      <Camera className="h-7 w-7 text-muted-foreground" />
+                      <div className="flex h-full w-full items-center justify-center text-muted-foreground">
+                        <Camera className="h-10 w-10" />
+                      </div>
                     )}
                   </div>
                 </div>
-                <div>
-                  <input
-                    ref={fileRef}
-                    type="file"
-                    accept="image/*"
-                    className="hidden"
-                    onChange={handleAvatar}
-                  />
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => fileRef.current?.click()}
-                    disabled={uploading}
-                  >
-                    <Camera className="mr-2 h-4 w-4" />
-                    {uploading ? "Uploading…" : avatarPreview ? "Change photo" : "Upload photo"}
-                  </Button>
-                  <p className="mt-2 text-xs text-muted-foreground">JPG or PNG, up to 5MB.</p>
+                <div className="absolute -right-3 -top-3 z-10 flex h-12 w-12 items-center justify-center rounded-full border-2 border-primary bg-accent text-sm font-bold text-primary-foreground shadow-lg">
+                  Hi!
+                </div>
+                <div className="absolute bottom-2 left-0 right-0 text-center text-xs font-semibold uppercase tracking-widest text-foreground">
+                  Member
                 </div>
               </div>
 
-              <div className="mt-6 grid gap-4 sm:grid-cols-2">
+              <div className="mt-10 w-full space-y-6 text-center">
                 <div>
-                  <Label htmlFor="fullName">Full name</Label>
-                  <Input
-                    id="fullName"
-                    value={fullName}
-                    onChange={(e) => {
-                      setFullName(e.target.value);
-                      setSavedAt(null);
-                    }}
-                    maxLength={120}
-                    required
-                  />
+                  <h1 className="font-serif text-3xl font-bold md:text-4xl">{displayName}</h1>
+                  <p className="mt-1 text-sm font-semibold uppercase tracking-widest text-accent">
+                    Team Resume Maker
+                  </p>
                 </div>
-                <div>
-                  <Label htmlFor="dob">Date of birth</Label>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <Button
-                        id="dob"
-                        type="button"
-                        variant="outline"
-                        className={cn(
-                          "w-full justify-start text-left font-normal",
-                          !dob && "text-muted-foreground",
-                        )}
-                      >
-                        <CalendarIcon className="mr-2 h-4 w-4" />
-                        {dob ? format(parseISO(dob), "PPP") : <span>Pick a date</span>}
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
-                      <Calendar
-                        mode="single"
-                        selected={dob ? parseISO(dob) : undefined}
-                        onSelect={(date) => {
-                          setDob(date ? format(date, "yyyy-MM-dd") : "");
-                          setSavedAt(null);
-                        }}
-                        initialFocus
-                        captionLayout="dropdown"
-                        fromYear={1940}
-                        toYear={new Date().getFullYear()}
-                        className="p-3 pointer-events-auto"
-                      />
-                    </PopoverContent>
-                  </Popover>
-                </div>
-                <div className="sm:col-span-2">
-                  <Label htmlFor="pemail">Email</Label>
-                  <Input
-                    id="pemail"
-                    type="email"
-                    value={email}
-                    onChange={(e) => {
-                      setEmail(e.target.value);
-                      setSavedAt(null);
-                    }}
-                    maxLength={255}
-                    required
-                  />
+
+                <div className="space-y-3 border-t border-primary-foreground/10 pt-6 text-left">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-primary-foreground/50">
+                      Contact
+                    </span>
+                    <span className="max-w-[60%] truncate text-sm font-medium">{displayEmail}</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-primary-foreground/50">
+                      Birthday
+                    </span>
+                    <span className="text-sm font-medium">{displayDob}</span>
+                  </div>
                 </div>
               </div>
-            </section>
 
-            <div className="flex flex-wrap items-center gap-4">
-              <Button
-                type="submit"
-                disabled={saveM.isPending || uploading}
-                className="bg-primary text-primary-foreground hover:bg-primary/90"
-              >
-                <Save className="mr-2 h-4 w-4" />
-                {saveM.isPending ? "Saving…" : "Save profile"}
-              </Button>
-              {data?.profile?.full_name ? (
-                <Button
-                  type="button"
-                  variant="outline"
-                  disabled={saveM.isPending}
-                  onClick={() => {
-                    setFullName(data.profile?.full_name ?? "");
-                    setEmail(data.profile?.email ?? data.email ?? "");
-                    setDob(data.profile?.date_of_birth ?? "");
-                    setAvatarPath(data.profile?.avatar_url ?? null);
-                    setAvatarPreview(data.avatarSignedUrl ?? null);
-                    setEditing(false);
-                  }}
-                >
-                  Cancel
-                </Button>
-              ) : null}
+              <div className="mt-auto w-full space-y-4 pt-8">
+                {!editing ? (
+                  <>
+                    <div className="hidden max-w-[180px] rotate-[5deg] rounded-lg border border-accent/30 bg-accent p-4 text-sm text-primary-foreground shadow-lg md:block">
+                      <p className="font-hand text-base leading-snug">
+                        Profile status: verified. Everything looks great for your next team resume!
+                      </p>
+                    </div>
+                    <Button
+                      type="button"
+                      onClick={() => {
+                        setSavedAt(null);
+                        setEditing(true);
+                      }}
+                      className="w-full rounded-2xl bg-accent py-6 text-base font-bold text-accent-foreground shadow-lg shadow-accent/20 transition-all hover:-translate-y-0.5 hover:bg-accent/90 active:scale-95"
+                    >
+                      <Pencil className="mr-2 h-4 w-4" /> Edit Profile
+                    </Button>
+                  </>
+                ) : (
+                  <div className="rotate-[3deg] rounded-xl border border-accent/30 bg-accent/10 p-4 text-sm text-primary-foreground shadow-lg">
+                    <p className="font-hand text-lg text-accent">Editing mode on</p>
+                    <p className="mt-1 text-xs opacity-80">Make changes on the right, then save.</p>
+                  </div>
+                )}
+              </div>
             </div>
 
-          </form>
+            <SpiralDivider />
+
+            {/* Right panel — details / form */}
+            <div className="relative flex w-full flex-col bg-card px-6 py-8 md:w-7/12 md:px-12 md:py-12">
+              {/* Lined paper background */}
+              <div
+                className="pointer-events-none absolute inset-0 opacity-30"
+                style={{
+                  backgroundImage: "linear-gradient(var(--border) 1.5px, transparent 1.5px)",
+                  backgroundSize: "100% 2.75rem",
+                }}
+              />
+
+              <div className="relative z-10 flex items-start justify-between">
+                <div>
+                  <h2 className="font-serif text-3xl font-black text-foreground md:text-4xl">
+                    {editing ? "Update Details" : "Account Details"}
+                  </h2>
+                  <p className="mt-1 text-sm text-muted-foreground">
+                    {editing
+                      ? "Update your identity across the platform."
+                      : "Here are the details you saved."}
+                  </p>
+                </div>
+                <span className="hidden select-none font-hand text-6xl font-bold text-accent/20 md:block">
+                  02
+                </span>
+              </div>
+
+              {!editing ? (
+                <div className="relative z-10 mt-10 flex flex-1 flex-col">
+                  <div className="space-y-8">
+                    <div className="group">
+                      <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                        Full Name
+                      </p>
+                      <p className="mt-1 border-b-2 border-border pb-2 font-serif text-xl font-medium text-foreground">
+                        {fullName || "—"}
+                      </p>
+                    </div>
+
+                    <div className="grid gap-8 md:grid-cols-2">
+                      <div className="group">
+                        <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                          Email Address
+                        </p>
+                        <p className="mt-1 border-b-2 border-border pb-2 text-lg text-foreground">
+                          {email || "—"}
+                        </p>
+                      </div>
+                      <div className="group">
+                        <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                          Birth Date
+                        </p>
+                        <p className="mt-1 border-b-2 border-border pb-2 text-lg text-foreground">
+                          {dob ? format(parseISO(dob), "PPP") : "—"}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="pt-4">
+                      <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                        Profile Photo
+                      </p>
+                      <div className="mt-3 flex items-center gap-4">
+                        <div className="flex h-14 w-14 items-center justify-center overflow-hidden rounded-xl border-2 border-dashed border-border bg-muted">
+                          {avatarPreview ? (
+                            <img
+                              src={avatarPreview}
+                              alt="Current avatar"
+                              className="h-full w-full object-cover"
+                            />
+                          ) : (
+                            <Camera className="h-6 w-6 text-muted-foreground" />
+                          )}
+                        </div>
+                        <div>
+                          <p className="text-sm font-semibold text-foreground">Current photo</p>
+                          <p className="text-xs text-muted-foreground">JPG or PNG, up to 5MB.</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="mt-auto flex flex-wrap items-center gap-4 pt-10">
+                    <Button
+                      type="button"
+                      onClick={() => {
+                        setSavedAt(null);
+                        setEditing(true);
+                      }}
+                      className="bg-primary px-8 py-6 text-base font-bold text-primary-foreground shadow-[6px_6px_0px_var(--accent)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[4px_4px_0px_var(--accent)] active:translate-x-[4px] active:translate-y-[4px] active:shadow-none"
+                    >
+                      <Pencil className="mr-2 h-4 w-4" /> Edit details
+                    </Button>
+                    {savedAt ? (
+                      <p
+                        className="flex items-center gap-2 text-sm font-medium text-foreground"
+                        role="status"
+                      >
+                        <CheckCircle2 className="h-4 w-4 text-primary" />
+                        Saved at {format(savedAt, "p")}
+                      </p>
+                    ) : null}
+                  </div>
+                </div>
+              ) : (
+                <form
+                  className="relative z-10 mt-10 flex flex-1 flex-col"
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    if (!fullName.trim()) return toast.error("Please enter your name");
+                    if (!email.trim()) return toast.error("Please enter your email");
+                    saveM.mutate();
+                  }}
+                >
+                  <div className="space-y-8">
+                    <div className="group">
+                      <Label
+                        htmlFor="fullName"
+                        className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground"
+                      >
+                        Full Name
+                      </Label>
+                      <Input
+                        id="fullName"
+                        value={fullName}
+                        onChange={(e) => {
+                          setFullName(e.target.value);
+                          setSavedAt(null);
+                        }}
+                        maxLength={120}
+                        required
+                        className="mt-1 border-0 border-b-2 border-border bg-transparent px-0 font-serif text-xl font-medium text-foreground shadow-none transition-colors focus:border-accent focus-visible:ring-0 focus-visible:ring-offset-0"
+                      />
+                    </div>
+
+                    <div className="grid gap-8 md:grid-cols-2">
+                      <div className="group">
+                        <Label
+                          htmlFor="pemail"
+                          className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground"
+                        >
+                          Email Address
+                        </Label>
+                        <Input
+                          id="pemail"
+                          type="email"
+                          value={email}
+                          onChange={(e) => {
+                            setEmail(e.target.value);
+                            setSavedAt(null);
+                          }}
+                          maxLength={255}
+                          required
+                          className="mt-1 border-0 border-b-2 border-border bg-transparent px-0 text-lg text-foreground shadow-none transition-colors focus:border-accent focus-visible:ring-0 focus-visible:ring-offset-0"
+                        />
+                      </div>
+
+                      <div className="group">
+                        <Label
+                          htmlFor="dob"
+                          className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground"
+                        >
+                          Birth Date
+                        </Label>
+                        <Popover>
+                          <PopoverTrigger asChild>
+                            <Button
+                              id="dob"
+                              type="button"
+                              variant="outline"
+                              className={cn(
+                                "mt-1 w-full justify-start border-0 border-b-2 border-border bg-transparent px-0 text-left text-lg font-normal text-foreground shadow-none hover:bg-transparent focus:border-accent focus-visible:ring-0 focus-visible:ring-offset-0",
+                                !dob && "text-muted-foreground",
+                              )}
+                            >
+                              <CalendarIcon className="mr-2 h-4 w-4 text-accent" />
+                              {dob ? format(parseISO(dob), "PPP") : <span>Pick a date</span>}
+                            </Button>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-auto p-0" align="start">
+                            <Calendar
+                              mode="single"
+                              selected={dob ? parseISO(dob) : undefined}
+                              onSelect={(date) => {
+                                setDob(date ? format(date, "yyyy-MM-dd") : "");
+                                setSavedAt(null);
+                              }}
+                              initialFocus
+                              captionLayout="dropdown"
+                              fromYear={1940}
+                              toYear={new Date().getFullYear()}
+                              className="pointer-events-auto p-3"
+                            />
+                          </PopoverContent>
+                        </Popover>
+                      </div>
+                    </div>
+
+                    <div className="pt-2">
+                      <Label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                        Update Avatar
+                      </Label>
+                      <input
+                        ref={fileRef}
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        onChange={handleAvatar}
+                      />
+                      <div className="mt-3 flex items-center gap-4">
+                        <button
+                          type="button"
+                          onClick={() => fileRef.current?.click()}
+                          disabled={uploading}
+                          className="flex h-14 w-14 items-center justify-center rounded-xl border-2 border-dashed border-border bg-background text-muted-foreground transition-colors hover:border-accent hover:text-accent disabled:opacity-50"
+                        >
+                          {uploading ? (
+                            <span className="h-5 w-5 animate-spin rounded-full border-2 border-current border-t-transparent" />
+                          ) : (
+                            <Plus className="h-6 w-6" />
+                          )}
+                        </button>
+                        <div>
+                          <p className="text-sm font-semibold text-foreground">
+                            {avatarPreview ? "Replace current photo" : "Upload a photo"}
+                          </p>
+                          <p className="text-xs text-muted-foreground">JPG or PNG, up to 5MB.</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="mt-auto flex flex-wrap items-center gap-4 pt-10">
+                    <Button
+                      type="submit"
+                      disabled={saveM.isPending || uploading}
+                      className="bg-accent px-10 py-6 text-base font-bold text-accent-foreground shadow-[6px_6px_0px_var(--primary)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[4px_4px_0px_var(--primary)] active:translate-x-[4px] active:translate-y-[4px] active:shadow-none"
+                    >
+                      <Save className="mr-2 h-4 w-4" />
+                      {saveM.isPending ? "Saving…" : "Save Profile"}
+                    </Button>
+
+                    {data?.profile?.full_name ? (
+                      <Button
+                        type="button"
+                        variant="outline"
+                        disabled={saveM.isPending}
+                        onClick={() => {
+                          resetToSaved();
+                          setEditing(false);
+                        }}
+                        className="border-border px-6 py-6 text-sm font-semibold"
+                      >
+                        <X className="mr-2 h-4 w-4" /> Cancel
+                      </Button>
+                    ) : null}
+                  </div>
+                </form>
+              )}
+
+              {/* Decorative star doodle */}
+              <Star className="pointer-events-none absolute bottom-8 right-8 h-20 w-20 rotate-12 text-accent/10" />
+            </div>
+          </div>
         )}
       </main>
     </div>
