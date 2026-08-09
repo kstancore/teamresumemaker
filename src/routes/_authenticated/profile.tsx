@@ -252,31 +252,31 @@ function ProfilePage() {
                 </div>
               </div>
 
-              <div className="mt-auto w-full pt-8">
+              <div className="mt-auto w-full space-y-4 pt-8">
                 {!editing ? (
-                  <Button
-                    type="button"
-                    onClick={() => {
-                      setSavedAt(null);
-                      setEditing(true);
-                    }}
-                    className="w-full rounded-2xl bg-accent py-6 text-base font-bold text-accent-foreground shadow-lg shadow-accent/20 transition-all hover:-translate-y-0.5 hover:bg-accent/90 active:scale-95"
-                  >
-                    <Pencil className="mr-2 h-4 w-4" /> Edit Profile
-                  </Button>
+                  <>
+                    <div className="hidden max-w-[180px] rotate-[5deg] rounded-lg border border-accent/30 bg-accent p-4 text-sm text-primary-foreground shadow-lg md:block">
+                      <p className="font-hand text-base leading-snug">
+                        Profile status: verified. Everything looks great for your next team resume!
+                      </p>
+                    </div>
+                    <Button
+                      type="button"
+                      onClick={() => {
+                        setSavedAt(null);
+                        setEditing(true);
+                      }}
+                      className="w-full rounded-2xl bg-accent py-6 text-base font-bold text-accent-foreground shadow-lg shadow-accent/20 transition-all hover:-translate-y-0.5 hover:bg-accent/90 active:scale-95"
+                    >
+                      <Pencil className="mr-2 h-4 w-4" /> Edit Profile
+                    </Button>
+                  </>
                 ) : (
                   <div className="rotate-[3deg] rounded-xl border border-accent/30 bg-accent/10 p-4 text-sm text-primary-foreground shadow-lg">
                     <p className="font-hand text-lg text-accent">Editing mode on</p>
                     <p className="mt-1 text-xs opacity-80">Make changes on the right, then save.</p>
                   </div>
                 )}
-              </div>
-
-              {/* Floating note */}
-              <div className="absolute bottom-28 left-6 hidden max-w-[180px] rotate-[5deg] rounded-lg border border-accent/30 bg-accent p-4 text-sm text-primary-foreground shadow-lg md:block">
-                <p className="font-hand text-base leading-snug">
-                  Profile status: verified. Everything looks great for your next team resume!
-                </p>
               </div>
             </div>
 
