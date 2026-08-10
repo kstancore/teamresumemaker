@@ -236,18 +236,20 @@ function ProfilePage() {
                   </p>
                 </div>
 
-                <div className="space-y-3 border-t border-primary-foreground/10 pt-6 text-left">
-                  <div className="flex items-center justify-between">
+                <div className="space-y-5 border-t border-primary-foreground/10 pt-6 text-left">
+                  <div className="flex flex-col gap-1.5">
                     <span className="text-[10px] font-bold uppercase tracking-widest text-primary-foreground/50">
                       Contact
                     </span>
-                    <span className="max-w-[60%] truncate text-sm font-medium">{displayEmail}</span>
+                    <span className="break-all text-sm font-medium leading-relaxed" title={displayEmail}>
+                      {displayEmail}
+                    </span>
                   </div>
-                  <div className="flex items-center justify-between">
+                  <div className="flex flex-col gap-1.5">
                     <span className="text-[10px] font-bold uppercase tracking-widest text-primary-foreground/50">
                       Birthday
                     </span>
-                    <span className="text-sm font-medium">{displayDob}</span>
+                    <span className="text-sm font-medium leading-relaxed">{displayDob}</span>
                   </div>
                 </div>
               </div>
