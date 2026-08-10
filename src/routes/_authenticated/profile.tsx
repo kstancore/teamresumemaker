@@ -322,28 +322,6 @@ function ProfilePage() {
                       </div>
                     </div>
 
-                    <div className="pt-4">
-                      <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-                        Profile Photo
-                      </p>
-                      <div className="mt-3 flex items-center gap-4">
-                        <div className="flex h-14 w-14 items-center justify-center overflow-hidden rounded-xl border-2 border-dashed border-border bg-muted">
-                          {avatarPreview ? (
-                            <img
-                              src={avatarPreview}
-                              alt="Current avatar"
-                              className="h-full w-full object-cover"
-                            />
-                          ) : (
-                            <Camera className="h-6 w-6 text-muted-foreground" />
-                          )}
-                        </div>
-                        <div>
-                          <p className="text-sm font-semibold text-foreground">Current photo</p>
-                          <p className="text-xs text-muted-foreground">JPG or PNG, up to 5MB.</p>
-                        </div>
-                      </div>
-                    </div>
                   </div>
 
                   <div className="mt-auto flex flex-wrap items-center gap-4 pt-10">
