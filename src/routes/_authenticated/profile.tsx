@@ -253,30 +253,12 @@ function ProfilePage() {
               </div>
 
               <div className="mt-auto w-full space-y-4 pt-8">
-                {!editing ? (
-                  <>
-                    <div className="hidden max-w-[180px] rotate-[5deg] rounded-lg border border-accent/30 bg-accent p-4 text-sm text-primary-foreground shadow-lg md:block">
-                      <p className="font-hand text-base leading-snug">
-                        Profile status: verified. Everything looks great for your next team resume!
-                      </p>
-                    </div>
-                    <Button
-                      type="button"
-                      onClick={() => {
-                        setSavedAt(null);
-                        setEditing(true);
-                      }}
-                      className="w-full rounded-2xl bg-accent py-6 text-base font-bold text-accent-foreground shadow-lg shadow-accent/20 transition-all hover:-translate-y-0.5 hover:bg-accent/90 active:scale-95"
-                    >
-                      <Pencil className="mr-2 h-4 w-4" /> Edit Profile
-                    </Button>
-                  </>
-                ) : (
+                {editing ? (
                   <div className="rotate-[3deg] rounded-xl border border-accent/30 bg-accent/10 p-4 text-sm text-primary-foreground shadow-lg">
                     <p className="font-hand text-lg text-accent">Editing mode on</p>
                     <p className="mt-1 text-xs opacity-80">Make changes on the right, then save.</p>
                   </div>
-                )}
+                ) : null}
               </div>
             </div>
 
@@ -340,28 +322,6 @@ function ProfilePage() {
                       </div>
                     </div>
 
-                    <div className="pt-4">
-                      <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-                        Profile Photo
-                      </p>
-                      <div className="mt-3 flex items-center gap-4">
-                        <div className="flex h-14 w-14 items-center justify-center overflow-hidden rounded-xl border-2 border-dashed border-border bg-muted">
-                          {avatarPreview ? (
-                            <img
-                              src={avatarPreview}
-                              alt="Current avatar"
-                              className="h-full w-full object-cover"
-                            />
-                          ) : (
-                            <Camera className="h-6 w-6 text-muted-foreground" />
-                          )}
-                        </div>
-                        <div>
-                          <p className="text-sm font-semibold text-foreground">Current photo</p>
-                          <p className="text-xs text-muted-foreground">JPG or PNG, up to 5MB.</p>
-                        </div>
-                      </div>
-                    </div>
                   </div>
 
                   <div className="mt-auto flex flex-wrap items-center gap-4 pt-10">
