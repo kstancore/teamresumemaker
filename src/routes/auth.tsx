@@ -60,7 +60,7 @@ function AuthPage() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [checking, setChecking] = useState(true);
+
   const [notice, setNotice] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -69,7 +69,7 @@ function AuthPage() {
     supabase.auth.getSession().then(({ data }) => {
       if (!active) return;
       if (data.session) navigate({ to: "/workspace", replace: true });
-      else setChecking(false);
+
     });
     const { data: sub } = supabase.auth.onAuthStateChange((event, session) => {
       if (event === "SIGNED_IN" && session) navigate({ to: "/workspace", replace: true });
