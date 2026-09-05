@@ -149,14 +149,6 @@ function AuthPage() {
     }
   }
 
-  if (checking) {
-    return (
-      <div className="paper isolate flex min-h-screen items-center justify-center">
-        <DoodleBackground />
-        <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
-      </div>
-    );
-  }
 
   const title =
     mode === "signup" ? "Create your account" : mode === "forgot" ? "Reset your password" : "Welcome back";
