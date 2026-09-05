@@ -76,16 +76,7 @@ function Landing() {
             </div>
             <span className="font-serif text-lg font-semibold">Team Resume Maker</span>
           </Link>
-          <div className="flex items-center gap-3">
-            <Link to="/auth">
-              <Button variant="ghost">Sign in</Button>
-            </Link>
-            <Link to="/auth" search={{ mode: "signup" }}>
-              <Button className="bg-primary text-primary-foreground hover:bg-primary/90">
-                Get started
-              </Button>
-            </Link>
-          </div>
+          <HeaderAuth />
         </div>
       </header>
 
