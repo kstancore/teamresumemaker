@@ -14,6 +14,24 @@ const searchSchema = z.object({ mode: z.enum(["signin", "signup"]).optional() })
 
 export const Route = createFileRoute("/auth")({
   validateSearch: searchSchema,
+  head: () => ({
+    meta: [
+      { title: "Log in or sign up — Team Resume Maker" },
+      {
+        name: "description",
+        content:
+          "Log in with email or Google to build, edit and download AI-merged team resumes in your Team Resume Maker workspace.",
+      },
+      { property: "og:title", content: "Log in or sign up — Team Resume Maker" },
+      {
+        property: "og:description",
+        content:
+          "Log in with email or Google to build, edit and download AI-merged team resumes in your Team Resume Maker workspace.",
+      },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+    ],
+  }),
   component: AuthPage,
 });
 

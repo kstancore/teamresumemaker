@@ -1,11 +1,68 @@
 import { DoodleBackground } from "@/components/doodle-background";
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { FileText, Sparkles, Users, Download, Coffee, PenLine, BookOpen } from "lucide-react";
 
 export const Route = createFileRoute("/")({
   component: Landing,
 });
+
+function HeaderAuth() {
+  const [signedIn, setSignedIn] = useState<boolean | null>(null);
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data }) => setSignedIn(Boolean(data.session)));
+    const { data: sub } = supabase.auth.onAuthStateChange((_e, session) =>
+      setSignedIn(Boolean(session)),
+    );
+    return () => sub.subscription.unsubscribe();
+  }, []);
+
+  async function handleSignOut() {
+    await queryClient.cancelQueries();
+    queryClient.clear();
+    await supabase.auth.signOut();
+    navigate({ to: "/auth", replace: true });
+  }
+
+  if (signedIn === null) return <div className="h-10" />;
+
+  if (signedIn) {
+    return (
+      <div className="flex items-center gap-3">
+        <Link to="/profile">
+          <Button variant="ghost">My account</Button>
+        </Link>
+        <Link to="/workspace">
+          <Button className="bg-primary text-primary-foreground hover:bg-primary/90">
+            My workspace
+          </Button>
+        </Link>
+        <Button variant="ghost" onClick={handleSignOut}>
+          Log out
+        </Button>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex items-center gap-3">
+      <Link to="/auth">
+        <Button variant="ghost">Log in</Button>
+      </Link>
+      <Link to="/auth" search={{ mode: "signup" }}>
+        <Button className="bg-primary text-primary-foreground hover:bg-primary/90">
+          Get started
+        </Button>
+      </Link>
+    </div>
+  );
+}
 
 function Landing() {
   return (
